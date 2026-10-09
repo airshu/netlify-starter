@@ -9,6 +9,15 @@ const app = Waline({
   },
 });
 
-module.exports.handler = serverless(http.createServer(app), {
-  basePath: '/.netlify/functions/comment',
-});
+const fn = serverless(http.createServer(app));
+const PREFIX = '/.netlify/functions/comment';
+
+module.exports.handler = async (event, context) => {
+  if (event.path && event.path.startsWith(PREFIX)) {
+    event.path = event.path.slice(PREFIX.length) || '/';
+  }
+  if (event.rawUrl && event.rawUrl.startsWith(PREFIX)) {
+    event.rawUrl = event.rawUrl.slice(PREFIX.length) || '/';
+  }
+  return fn(event, context);
+};
