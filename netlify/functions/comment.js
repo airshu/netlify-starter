@@ -9,4 +9,6 @@ const app = Waline({
   },
 });
 
-module.exports.handler = serverless(http.createServer(app));
+module.exports.handler = serverless(http.createServer(app), {
+  basePath: '/.netlify/functions/comment',
+});
